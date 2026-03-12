@@ -1,20 +1,20 @@
 
 
 # the dumbest one I could think of... remove all vowels
-def rileySuperSecretEncrypt01(someWord):
+def rileySuperSecretEncrypt01(word):
     removals = "aeiouy"
     result = ""
-    for eachLetter in someWord:
+    for eachLetter in word:
         if not eachLetter in removals:
             result += eachLetter
     return result
 
 
 # substitute vowels and stuff
-def rileySuperSecretEncrypt02(someWord):
+def rileySuperSecretEncrypt02(word):
     substitutions = {"a":"@", "e":"3", "i":"1", "o":"0", "b":"6", "g":"9", "s":"5", "t":"+"}
     result = ""
-    for eachLetter in someWord:
+    for eachLetter in word:
         if eachLetter in substitutions:
             result += substitutions[eachLetter]
         else:
@@ -23,25 +23,45 @@ def rileySuperSecretEncrypt02(someWord):
 
 
 # rotate vowels with recursion
-def rileySuperSecretEncrypt03(someWord):
-    if len(someWord) >= 16:
-        return someWord
-    substitutions = {"a":"ee", "e":"ii", "i":"oo", "o":"uu", "u":"aa", "r":"ss", "s":"tt", "t":"ss"}
-    result = "*"
-    for eachLetter in someWord:
+def rileySuperSecretEncrypt03(word):
+    if len(word) >= 64 or len(word) == 0:
+        return word
+    substitutions = {"a":"ei", "e":"io", "i":"ou", "o":"ua", "u":"ae", "r":"st", "s":"tr", "t":"rs"}
+    result = word[-1]
+    for eachLetter in word:
         if eachLetter in substitutions:
             result += substitutions[eachLetter]
         else:
             result += eachLetter
-    return rileySuperSecretEncrypt03(result) + "*"
+    return rileySuperSecretEncrypt03(result) + word[0]
     
 
+# this is just for testing as more words get added to bigListOfWords.txt
+def checkForDuplicatesInWordList():
+    dictionaryOfWords = {}
+    with open("bigListOfWords.txt") as myFile:
+        for eachWord in myFile:
+            if eachWord in dictionaryOfWords:
+                # already in the dictionary?
+                dictionaryOfWords[eachWord] += 1
+                # print("OOPS " + eachWord + " is already in the dictionaryOfWords", end =" / ")
+                # return
+            else:
+                # add to dictionaryOfHashes and set it to 1 appearance
+                dictionaryOfWords[eachWord] = 1
+    # print("no duplicates")
+    with open("words.txt", "w") as f:
+        for key in dictionaryOfWords:
+            f.write(key)
 
 
+
+# param functionName - the function that will be tested for collisions
+# for example, checkForCollisions(rileySuperSecretEncrypt01)
 def checkForCollisions(functionName):
     hasCollisions = False
     dictionaryOfHashes = {}
-    with open("google-10000-english-no-swears.txt") as myFile:
+    with open("bigListOfWords.txt") as myFile:
         for eachWord in myFile:
             # get each encrypted version
             encryptedWord = functionName(eachWord.strip("\n"))
@@ -63,17 +83,21 @@ def checkForCollisions(functionName):
 
 
 def printEncryptedWords():
-    with open("google-10000-english-no-swears.txt") as myFile:
+    with open("bigListOfWords.txt") as myFile:
         for eachWord in myFile:
             # print(eachWord)
             encryptedWord = rileySuperSecretEncrypt01(eachWord.strip("\n"))
             print(encryptedWord)
 
 
-# checkForCollisions(rileySuperSecretEncrypt01)
 
-# checkForCollisions(rileySuperSecretEncrypt02)
+# checkForCollisions(functionName = rileySuperSecretEncrypt01)
 
-# checkForCollisions(rileySuperSecretEncrypt03)
+# checkForCollisions(functionName = rileySuperSecretEncrypt02)
 
-printEncryptedWords()
+# checkForCollisions(functionName = rileySuperSecretEncrypt03)
+
+# printEncryptedWords()
+
+# print(rileySuperSecretEncrypt03("Hello World"))
+print("Hello World")
