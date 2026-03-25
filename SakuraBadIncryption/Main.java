@@ -19,8 +19,10 @@ public class Main {
         //Incrypts (tm) and decrypts the messages
         String encrypted = Encrypt(toEncrypt, userKey);
         String decrypted = Decrypt(encrypted, userKey);
+        String decryptedWrong = Decrypt(encrypted, "wrong key dummy");
         System.out.println(encrypted);
         System.out.println(decrypted);
+        System.out.println(decryptedWrong);
     }
 
     public static String Encrypt(String toEncrypt, String userKey) {
@@ -57,15 +59,15 @@ public class Main {
             int keyLetter = ind % userKey.length();
             int keyInd = GetCharacterIndex(userKey.substring(keyLetter, keyLetter + 1));
             
-            charInd = -charInd - keyInd + characters.length(); //WARNING: i have insufficient IQ to convert symbols back so they become letters
-            
+            charInd = Math.abs(-charInd - keyInd + characters.length()); //WARNING: i have insufficient IQ to convert symbols back so they become letters
+
             if (charInd == -1) {
                 System.out.println("WARNING: character " + character + " lost!");
                 continue;
             }
             
             decrypted += characters.substring(charInd, charInd + 1);
-            System.out.println(characters.substring(charInd, charInd + 1) + ": " + charInd);
+            // System.out.println(characters.substring(charInd, charInd + 1) + ": " + charInd);
         }
 
         return decrypted;
